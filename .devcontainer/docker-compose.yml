@@ -16,7 +16,9 @@ services:
       - ..:/workspace:cached
       - $HOME/.ssh/:/home/ruby/.ssh/ # Mount the ssh folder to authenticate with github
       - bundle:/usr/local/bundle
-
+    environment:
+      HUB_URL: http://chrome:4444/wd/hub
+      PARALLEL_WORKERS: 1 # makes tests run sequentially instead of parallelizing them
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
 

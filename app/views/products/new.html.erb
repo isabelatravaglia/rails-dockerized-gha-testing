@@ -1,0 +1,9 @@
+<h1>Add a product</h1>
+
+<div class="container">
+  <%= simple_form_for @product do |f| %>
+    <%= f.input :name %>
+    <%= f.input :tagline %>
+    <%= f.submit %>
+  <% end %>
+</div>
