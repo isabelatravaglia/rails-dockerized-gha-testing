@@ -1,0 +1,37 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.158.0/containers/ruby-rails
+{
+  "name": "Ruby on Rails",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+	
+  // Set *default* container specific settings.json values on container create.
+  "settings": { 
+    "workbench.colorTheme": "Cobalt2",
+    "terminal.integrated.shell.linux": "/bin/zsh",
+    "dotfiles.repository": "isabelatravaglia/dotfiles",
+    "dotfiles.targetPath": "~/dotfiles",
+    "dotfiles.installCommand": "~/dotfiles/install.sh"
+  },
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "ms-vscode.sublime-keybindings",
+    "hridoy.rails-snippets",
+    "dbaeumer.vscode-eslint",
+    "rayhanw.erb-helpers",
+    "misogi.ruby-rubocop",
+    "sdras.night-owl",
+    "CoenraadS.bracket-pair-colorizer"
+  ],
+	
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000, 3001],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+
+  // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "ruby"
+}

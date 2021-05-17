@@ -1,0 +1,43 @@
+version: '3.8'
+
+volumes: 
+  postgres_data:
+  bundle:
+
+services:
+  app:
+    # See https://aka.ms/vscode-remote/containers/non-root for details.
+    user: ruby
+
+    build: 
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+      - $HOME/.ssh/:/home/ruby/.ssh/ # Mount the ssh folder to authenticate with github
+      - bundle:/usr/local/bundle
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    depends_on: 
+      - db
+      - chrome
+
+  db:
+    image: postgres
+    restart: unless-stopped
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  chrome:
+    image: selenium/standalone-chrome-debug
+    ports:
+      - 4444:4444
+      - 5900:5900
+    volumes:
+      - /dev/shm:/dev/shm
