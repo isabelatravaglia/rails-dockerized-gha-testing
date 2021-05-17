@@ -23,7 +23,7 @@ RUN sudo apt install -y zsh imagemagick jq \
 
 
 ARG BUNDLER_VERSION=2.1.4
-ARG RAILS_VERSION=6.1.3
+ARG RAILS_VERSION=6.1.3.1
 
 # Configure bundler
 ENV LANG=C.UTF-8 \
