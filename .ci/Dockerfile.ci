@@ -1,0 +1,33 @@
+# https://github.com/isabelatravaglia/rails-base-image/Dockerfile.ruby266
+FROM isabtra/rails-tlh-repo-dev:2.0
+ARG BUNDLER_VERSION=2.1.4
+
+RUN mkdir -p /app && chown $USER:$USER /app
+WORKDIR /app
+
+# Configure bundler
+ENV LANG=C.UTF-8 \
+  BUNDLE_JOBS=4 \
+  BUNDLE_RETRY=3
+
+RUN gem install bundler -v $BUNDLER_VERSION
+
+COPY --chown=$USER:$USER Gemfile /app/Gemfile
+COPY --chown=$USER:$USER Gemfile.lock /app/Gemfile.lock
+COPY --chown=$USER:$USER package.json /app/package.json
+COPY --chown=$USER:$USER yarn.lock /app/yarn.lock
+
+USER $USER
+
+RUN bundle install
+RUN yarn install
+
+COPY --chown=$USER:$USER . /app
+
+# Add a script to be executed every time the container starts.
+COPY entrypoint.sh /usr/bin/
+RUN sudo chmod +x /usr/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
+
+ENV PATH /app/bin:$PATH
