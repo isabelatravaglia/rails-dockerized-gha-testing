@@ -9,6 +9,11 @@ services:
       PARALLEL_WORKERS: 1 # makes tests run sequentially instead of parallelizing them
     command: >
       bash -c "rails test && rails test:system"
+
+    networks:
+      default:
+        external: true
+        name: test_network
   # database:
   #   image: ${DB_IMAGE_TAG:-db}
   #   restart: unless-stopped

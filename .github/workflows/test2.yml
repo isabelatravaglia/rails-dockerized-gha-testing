@@ -27,6 +27,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          --network test_network
 
       chrome:
         image: selenium/standalone-chrome-debug
@@ -35,6 +36,8 @@ jobs:
           - 5900:5900
         volumes:
           - /dev/shm:/dev/shm
+        options: >-
+        --network test_network
 
     steps:
     - name: Checkout code
