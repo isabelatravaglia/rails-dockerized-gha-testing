@@ -85,6 +85,6 @@ COPY --chown=$USER:$USER . /app
 COPY .ci2/entrypoint2.sh /usr/bin/
 RUN sudo chmod +x /usr/bin/entrypoint2.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["entrypoint2.sh"]
 
 ENV PATH /app/bin:$PATH
