@@ -1,0 +1,126 @@
+name: Test
+
+# triggers on
+on: [push]
+
+jobs:
+  test:
+    env:
+      RAILS_ENV: test
+      NODE_ENV: test
+    runs-on: ubuntu-latest # runner
+    
+    services:
+      database:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      chrome:
+        image: selenium/standalone-chrome-debug
+        ports:
+          - 4444:4444
+          - 5900:5900
+        volumes:
+          - /dev/shm:/dev/shm
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        version: latest
+        install: true
+
+    - name: Prepare Tags
+      id: tags
+      run: |
+        TAG=$(echo $GITHUB_SHA | head -c7)
+        IMAGE="isabtra/rails-thelighthouse_test"
+        echo ::set-output name=tagged_image::${IMAGE}:${TAG}
+        echo ::set-output name=tag::${TAG}
+         
+    - name: Cache main image layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-main-cache
+        key: ${{ runner.os }}-buildx-main-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-main-
+    # - name: Cache postgres image layers
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: /tmp/.buildx-postgres-cache
+    #     key: ${{ runner.os }}-buildx-postgres-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-buildx-postgres-
+    # - name: Cache chrome image layers
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: /tmp/.buildx-chrome-cache
+    #     key: ${{ runner.os }}-buildx-chrome-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-buildx-chrome-
+    - name: Build code
+      uses: docker/build-push-action@v2
+      with:
+        push: false
+        file: .ci2/Dockerfile.ci
+        load: true
+        cache-from: type=local,src=/tmp/.buildx-main-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-main-cache-new
+        tags: ${{ steps.tags.outputs.tagged_image }}
+    
+    # - name: Build DB
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     push: false
+    #     file: .ci/Dockerfile.postgres
+    #     load: true
+    #     cache-from: type=local,src=/tmp/.buildx-postgres-cache
+    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-postgres-cache-new
+    #     tags: db-${{ steps.tags.outputs.tagged_image }}
+
+    # - name: Build Chrome
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     push: false
+    #     file: .ci/Dockerfile.chrome
+    #     load: true
+    #     cache-from: type=local,src=/tmp/.buildx-chrome-cache
+    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-chrome-cache-new
+    #     tags: chrome-${{ steps.tags.outputs.tagged_image }}
+
+    - name: Run Tests
+      run: |
+        TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} docker-compose -f .ci2/docker-compose.test.yml run test
+      
+    # Temp fix
+    # https://github.com/docker/build-push-action/issues/252
+    # https://github.com/moby/buildkit/issues/1896
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-main-cache
+        mv /tmp/.buildx-main-cache-new /tmp/.buildx-main-cache
+        rm -rf /tmp/.buildx-postgres-cache
+        mv /tmp/.buildx-postgres-cache-new /tmp/.buildx-postgres-cache
+        rm -rf /tmp/.buildx-chrome-cache
+        mv /tmp/.buildx-chrome-cache-new /tmp/.buildx-chrome-cache
