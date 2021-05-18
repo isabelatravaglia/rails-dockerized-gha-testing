@@ -13,7 +13,7 @@ cp config/database.github.yml config/database.yml
 echo "finished copying new test db config"
 
 echo "running db:prepare"
-bundle exec rails db:prepare
+bundle exec rails db:test:prepare
 echo "finished running db:prepare"
 
 exec "$@"
