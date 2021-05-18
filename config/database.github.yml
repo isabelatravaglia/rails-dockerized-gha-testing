@@ -1,7 +1,7 @@
 development:
   adapter: postgresql
   encoding: unicode
-  host: database
+  host: localhost
   port: 5432
   username: postgres
   password: postgres
@@ -10,7 +10,7 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  host: database
+  host: localhost
   port: 5432
   username: postgres
   password: postgres
