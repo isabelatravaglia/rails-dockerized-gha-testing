@@ -109,6 +109,11 @@ jobs:
     #     cache-to: type=local,mode=max,dest=/tmp/.buildx-chrome-cache-new
     #     tags: chrome-${{ steps.tags.outputs.tagged_image }}
 
+    - name: Prepare DB
+      run: | 
+        cp config/database.github.yml config/database.yml
+        bundle exec rails db:test:prepare
+
     - name: Run Tests
       run: |
         TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} docker-compose -f .ci2/docker-compose.test.yml run test
