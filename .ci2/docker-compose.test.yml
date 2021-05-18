@@ -4,9 +4,9 @@ services:
   test:
     image: ${TEST_IMAGE_TAG:-test}
     # shm_size: '256mb'
-    # depends_on: 
-      # - database
-      # - chrome
+    depends_on: 
+      - database
+      - chrome
     environment:
       HUB_URL: http://chrome:4444/wd/hub
       PARALLEL_WORKERS: 1 # makes tests run sequentially instead of parallelizing them
