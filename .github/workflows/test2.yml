@@ -37,7 +37,7 @@ jobs:
         volumes:
           - /dev/shm:/dev/shm
         options: >-
-        --network test_network
+          --network test_network
 
     steps:
     - name: Checkout code
