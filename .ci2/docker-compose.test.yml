@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.8'
 
 services:
   test:
@@ -10,10 +10,10 @@ services:
     command: >
       bash -c "rails test && rails test:system"
 
-    networks:
-      default:
-        external: true
-        name: localhost
+networks:
+  default:
+    external: true
+    name: localhost
   # database:
   #   image: ${DB_IMAGE_TAG:-db}
   #   restart: unless-stopped
