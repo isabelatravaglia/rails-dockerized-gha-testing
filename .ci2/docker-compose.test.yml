@@ -4,7 +4,7 @@ services:
   test:
     image: ${TEST_IMAGE_TAG:-test}
     # shm_size: '256mb'
-    depends_on: 
+    # depends_on: 
       # - database
       # - chrome
     environment:
