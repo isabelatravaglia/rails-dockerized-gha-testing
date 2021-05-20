@@ -18,7 +18,6 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
-          # POSTGRES_HOST: localhost
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
@@ -129,7 +128,3 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-main-cache
         mv /tmp/.buildx-main-cache-new /tmp/.buildx-main-cache
-        rm -rf /tmp/.buildx-postgres-cache
-        mv /tmp/.buildx-postgres-cache-new /tmp/.buildx-postgres-cache
-        rm -rf /tmp/.buildx-chrome-cache
-        mv /tmp/.buildx-chrome-cache-new /tmp/.buildx-chrome-cache
