@@ -39,6 +39,7 @@ jobs:
     steps:
 
     - name: Output services network
+      id: network
       run: |
         echo ::set-output name=services_network::${{ job.container.network }}
         echo ${{ job.container.network }}
@@ -119,7 +120,7 @@ jobs:
 
     - name: Run Tests
       run: |
-        TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} docker-compose -f .ci2/docker-compose.test.yml run test
+        TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} SERVICES_NETWORK=${{ steps.network.outputs.services_network }} docker-compose -f .ci2/docker-compose.test.yml run test
       
     # Temp fix
     # https://github.com/docker/build-push-action/issues/252
