@@ -1,6 +1,5 @@
 name: Test
 
-# triggers on
 on: [push]
 
 jobs:
@@ -12,14 +11,11 @@ jobs:
     
     services:
       database:
-        # Docker Hub image
         image: postgres
-        # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -72,20 +68,7 @@ jobs:
         key: ${{ runner.os }}-buildx-main-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-main-
-    # - name: Cache postgres image layers
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: /tmp/.buildx-postgres-cache
-    #     key: ${{ runner.os }}-buildx-postgres-${{ github.sha }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-buildx-postgres-
-    # - name: Cache chrome image layers
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: /tmp/.buildx-chrome-cache
-    #     key: ${{ runner.os }}-buildx-chrome-${{ github.sha }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-buildx-chrome-
+   
     - name: Build code
       uses: docker/build-push-action@v2
       with:
@@ -95,32 +78,12 @@ jobs:
         cache-from: type=local,src=/tmp/.buildx-main-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-main-cache-new
         tags: ${{ steps.tags.outputs.tagged_image }}
-    
-    # - name: Build DB
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     push: false
-    #     file: .ci/Dockerfile.postgres
-    #     load: true
-    #     cache-from: type=local,src=/tmp/.buildx-postgres-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-postgres-cache-new
-    #     tags: db-${{ steps.tags.outputs.tagged_image }}
-
-    # - name: Build Chrome
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     push: false
-    #     file: .ci/Dockerfile.chrome
-    #     load: true
-    #     cache-from: type=local,src=/tmp/.buildx-chrome-cache
-    #     cache-to: type=local,mode=max,dest=/tmp/.buildx-chrome-cache-new
-    #     tags: chrome-${{ steps.tags.outputs.tagged_image }}
 
     - name: Run Tests
       run: |
         TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} SERVICES_NETWORK=${{ steps.network.outputs.services_network }} docker-compose -f .ci2/docker-compose.test.yml run test
       
-    # Temp fix
+    # Temp fix for growing cache
     # https://github.com/docker/build-push-action/issues/252
     # https://github.com/moby/buildkit/issues/1896
     - name: Move cache

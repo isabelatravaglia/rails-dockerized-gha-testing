@@ -1,6 +1,5 @@
 name: Test
 
-# triggers on
 on: [push]
 
 jobs:
@@ -89,7 +88,7 @@ jobs:
       run: |
         TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} DB_IMAGE_TAG=db-${{ steps.tags.outputs.tagged_image }} CHROME_IMAGE_TAG=chrome-${{ steps.tags.outputs.tagged_image }} docker-compose -f .ci/docker-compose.test.yml run test
       
-    # Temp fix
+    # Temp fix for growing cache
     # https://github.com/docker/build-push-action/issues/252
     # https://github.com/moby/buildkit/issues/1896
     - name: Move cache
