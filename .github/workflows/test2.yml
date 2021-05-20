@@ -37,6 +37,12 @@ jobs:
           - /dev/shm:/dev/shm
 
     steps:
+
+    - name: Output services network
+      run: |
+      echo ::set-output name=services_network::${{ job.container.network }}
+      echo ${{ job.container.network }}
+
     - name: Checkout code
       uses: actions/checkout@v2
 
