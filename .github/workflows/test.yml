@@ -30,7 +30,7 @@ jobs:
       id: tags
       run: |
         TAG=$(echo $GITHUB_SHA | head -c7)
-        IMAGE="isabtra/rails-thelighthouse_test"
+        IMAGE="dev/test"
         echo ::set-output name=tagged_image::${IMAGE}:${TAG}
         echo ::set-output name=tag::${TAG}
          
