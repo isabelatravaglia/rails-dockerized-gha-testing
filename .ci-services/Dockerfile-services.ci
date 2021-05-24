@@ -82,9 +82,9 @@ RUN yarn install
 COPY --chown=$USER:$USER . /app
 
 # Add a script to be executed every time the container starts.
-COPY .ci2/entrypoint2.sh /usr/bin/
-RUN sudo chmod +x /usr/bin/entrypoint2.sh
+COPY .ci-services/entrypoint-services.sh /usr/bin/
+RUN sudo chmod +x /usr/bin/entrypoint-services.sh
 
-ENTRYPOINT ["entrypoint2.sh"]
+ENTRYPOINT ["entrypoint-services.sh"]
 
 ENV PATH /app/bin:$PATH
