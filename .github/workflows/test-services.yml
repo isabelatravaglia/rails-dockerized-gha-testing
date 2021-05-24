@@ -73,7 +73,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: false
-        file: .ci2/Dockerfile.ci
+        file: .ci-services/Dockerfile-services.ci
         load: true
         cache-from: type=local,src=/tmp/.buildx-main-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-main-cache-new
@@ -81,7 +81,7 @@ jobs:
 
     - name: Run Tests
       run: |
-        TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} SERVICES_NETWORK=${{ steps.network.outputs.services_network }} docker-compose -f .ci2/docker-compose.test.yml run test
+        TEST_IMAGE_TAG=${{ steps.tags.outputs.tagged_image }} SERVICES_NETWORK=${{ steps.network.outputs.services_network }} docker-compose -f .ci-services/docker-compose.test.services.yml run test
       
     # Temp fix for growing cache
     # https://github.com/docker/build-push-action/issues/252
