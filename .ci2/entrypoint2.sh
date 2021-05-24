@@ -8,10 +8,6 @@ for file in $PWD/*; do
   echo "${file##*/}"
 done
 
-echo "copying new test db config"
-cp config/database.github.yml config/database.yml
-echo "finished copying new test db config"
-
 echo "running db:test:prepare"
 bundle exec rails db:test:prepare
 echo "finished running db:prepare"
