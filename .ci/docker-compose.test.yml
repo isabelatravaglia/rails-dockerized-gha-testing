@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  test:
+    image: ${TEST_IMAGE_TAG:-test}
+    # shm_size: '256mb'
+    depends_on: 
+      - database
+      - chrome
+    environment:
+      HUB_URL: http://chrome:4444/wd/hub
+      PARALLEL_WORKERS: 1 # makes tests run sequentially instead of simultaneously
+    command: >
+      bash -c "rails test && rails test:system"
+  database:
+    image: ${DB_IMAGE_TAG:-db}
+    restart: unless-stopped
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  chrome:
+    image: ${CHROME_IMAGE_TAG:-chrome}
+    ports:
+      - 4444:4444
+      - 5900:5900
+    volumes:
+      - /dev/shm:/dev/shm
