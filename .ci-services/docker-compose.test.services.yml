@@ -5,7 +5,7 @@ services:
     image: ${TEST_IMAGE_TAG:-test}
     environment:
       HUB_URL: http://chrome:4444/wd/hub
-      PARALLEL_WORKERS: 1 # makes tests run sequentially instead of parallelizing them
+      PARALLEL_WORKERS: 1 # makes tests run sequentially instead of simultaneously
     command: >
       bash -c "rails test && rails test:system"
 
