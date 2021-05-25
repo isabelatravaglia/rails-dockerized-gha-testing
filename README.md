@@ -1,24 +1,4 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+This is a Dockerized Rails app with two approaches to set up Github Actions workflow for tests.
+There is a .devcontainer folder on it, so you can use Vscode to open it inside a container (https://code.visualstudio.com/docs/remote/containers).
