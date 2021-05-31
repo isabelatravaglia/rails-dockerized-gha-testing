@@ -23,10 +23,10 @@ services:
     command: sleep infinity
 
     depends_on: 
-      - db
+      - database
       - chrome
 
-  db:
+  database:
     image: postgres
     restart: unless-stopped
     volumes: 
